@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>MY Notes</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+        <style>
+            * {
+                background: #F8BBD0;
+            }
+            .txt{
+                font-size: 0.5in;
+                font-family: 'Times New Roman', Times, serif;
+            }
+            .header {
+                color: black; /* Text color to contrast with the brown background */
+                font-family: 'Brush Script MT', cursive;
+                font-size: 2em;
+            }
+            .styled-button {
+                width: 120px;
+                height: 40px;
+                background-color: #5D4037;
+                color: white;
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 1em;
+                border: none;
+                border-radius: 25px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                transition: background-color 0.2s;
+            }
+            .styled-button:hover {
+                background-color: #5D4037; 
+            }
+            .input-box {
+                position: relative;
+                width: 80%;
+                max-width: 500px;
+                min-height: 100px;
+                background: #fff;
+                color: #333;
+                padding: 20px;
+                margin: 20px 0;
+                outline: none;
+                border-radius: 5px;
+                box-sizing: border-box;
+                display: flex;
+                flex-direction: column;
+                justify-content: center; /* Center vertically */
+                text-align: center; /* Center horizontally */
+                font-family: 'Times New Roman', Times, serif;
+            }
+            .input-box .fa-trash {
+                position: absolute;
+                bottom: 10px;
+                right: 10px;
+                cursor: pointer;
+            }
+            .input-box p {
+                margin: 0;
+                padding: 0;
+                text-align: center; /* Center text horizontally */
+                flex-grow: 1;
+                font-family: 'Times New Roman', Times, serif;
+            }
+        </style>
+    </head>
+    <body>
+        <h1 class="header" align="center">☆*.｡.o(Mart Notes)o.｡.*☆</h1>
+        <button class="styled-button" onclick="addNote()">+Add Note</button>
+        <div class="notes-container" id="notes-container">
+            <!-- Notes will be added here -->
+        </div>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', (event) => {
+                loadNotes();
+            });
+
+            function addNote() {
+                const notesContainer = document.getElementById('notes-container');
+                const note = document.createElement('div');
+                note.className = 'input-box';
+                note.innerHTML = '<p contenteditable="true" oninput="saveNotes()"></p><i class="fas fa-trash" onclick="removeNote(this)"></i>';
+                notesContainer.appendChild(note);
+                saveNotes();
+            }
+
+            function removeNote(element) {
+                const note = element.parentElement;
+                note.remove();
+                saveNotes();
+            }
+
+            function saveNotes() {
+                const notesContainer = document.getElementById('notes-container');
+                const notes = [];
+                notesContainer.querySelectorAll('.input-box p').forEach(note => {
+                    notes.push(note.innerHTML);
+                });
+                localStorage.setItem('notes', JSON.stringify(notes));
+            }
+
+            function loadNotes() {
+                const notesContainer = document.getElementById('notes-container');
+                const notes = JSON.parse(localStorage.getItem('notes')) || [];
+                notes.forEach(noteContent => {
+                    const note = document.createElement('div');
+                    note.className = 'input-box';
+                    note.innerHTML = `<p contenteditable="true" oninput="saveNotes()">${noteContent}</p><i class="fas fa-trash" onclick="removeNote(this)"></i>`;
+                    notesContainer.appendChild(note);
+                });
+            }
+        </script>
+    </body>
+</html>
